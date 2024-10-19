@@ -49,7 +49,9 @@ def product_details(product_id):
     if product:
         return render_template('product_details.html', product=product)
     else:
-        return "Product not found", 404
+        return render_template("404.html"), 404
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)

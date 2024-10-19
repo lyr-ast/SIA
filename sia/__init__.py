@@ -1,17 +1,22 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from os import path
+from os import path, getenv, urandom
 from flask_login import LoginManager
+from dotenv import load_dotenv
 
+
+load_dotenv()
 
 db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__)
-
-    app.config['SECRET_KEY'] = 'secret-key-goes-here'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+    app.config['SECRET_KEY'] = getenv("SECRET_KEY", urandom(24))
+    app.config['SQLALCHEMY_DATABASE_URI'] = getenv("DATABASE_URL")
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
+
+    
  
 
     # blueprint for auth routes in our app
