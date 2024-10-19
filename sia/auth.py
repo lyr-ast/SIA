@@ -21,16 +21,14 @@ def login():
 
 
         user = User.query.filter_by(email=email).first()
-        if user:
-            if bcrypt.check_password_hash(user.password, password):
+        if user and bcrypt.check_password_hash(user.password, password):
 
-                flash('Logged in successfully!', category='success')
-                login_user(user, remember=True)
-                return redirect(url_for('views.home'))
-            else: 
-                flash('Incorrect password, try again.', category='danger')
+            flash('Logged in successfully!', category='success')
+            login_user(user, remember=True)
+            return redirect(url_for('views.home'))
+
         else:
-            flash('Email does not exist.', category='danger')
+            flash('Incorrect Email or password, try again', category='danger')
 
     return render_template("sign_in.html", user=current_user)
 
