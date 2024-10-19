@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification</title>
+    <link rel="stylesheet" href="/static/styles.css"> <!-- Assuming you're using the same CSS file for theme -->
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #000000; /* fallback for old browsers */
+            background: linear-gradient(to right, #000000, #130F40);
+            background-size: cover;
+            color: #e0e0e0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1); /* Transparent background */
+            backdrop-filter: blur(10px); /* Blur for glass effect */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Semi-transparent border */
+            border-radius: 16px;
+            padding: 30px;
+            width: 350px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+            text-align: center;
+        }
+
+        .container h2 {
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .otp-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .otp-inputs input {
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            font-size: 20px;
+            border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            outline: none;
+        }
+
+        .timer {
+            color: #FF9900;
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .otp-buttons button {
+            padding: 10px 20px;
+            background-color: #FF9900;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #000;
+            border-radius: 5px;
+            margin: 0 10px;
+            opacity: 0.9;
+            transition: opacity 0.3s ease;
+        }
+
+        .otp-buttons button:disabled {
+            background-color: #666;
+            cursor: not-allowed;
+        }
+
+        .otp-buttons button:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Enter OTP</h2>
+        
+        <!-- OTP Input Fields -->
+        <div class="otp-inputs">
+            <input type="text" maxlength="1" class="otp-input" id="otp1" oninput="moveToNext(this, 'otp2')" required>
+            <input type="text" maxlength="1" class="otp-input" id="otp2" oninput="moveToNext(this, 'otp3')" required>
+            <input type="text" maxlength="1" class="otp-input" id="otp3" oninput="moveToNext(this, 'otp4')" required>
+            <input type="text" maxlength="1" class="otp-input" id="otp4" oninput="validateOtp()" required>
+        </div>
+
+        <!-- Timer Display -->
+        <p class="timer" id="otp-timer">Time remaining: 2:00</p>
+
+        <!-- Buttons for Verify and Resend OTP -->
+        <div class="otp-buttons">
+            <button id="verify-btn" disabled>Verify</button>
+            <button id="resend-btn" disabled>Resend OTP</button>
+        </div>
+    </div>
+
+    <script>
+        let otpTimer;
+        let resendTimer;
+
+        // OTP Countdown Timer - 2 minutes
+        function startOTPTimer(duration, display) {
+            let timer = duration, minutes, seconds;
+            otpTimer = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = "Time remaining: " + minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    clearInterval(otpTimer);
+                    display.textContent = "OTP expired!";
+                    // Disable verify button after time expires
+                    document.getElementById('verify-btn').disabled = true;
+                }
+            }, 1000);
+        }
+
+        // Resend OTP Timer - 1 minute
+        function startResendTimer(duration, button) {
+            let timer = duration;
+            resendTimer = setInterval(function () {
+                button.textContent = "Resend in " + timer + "s";
+                button.disabled = true;
+
+                if (--timer < 0) {
+                    clearInterval(resendTimer);
+                    button.textContent = "Resend OTP";
+                    button.disabled = false;
+                }
+            }, 1000);
+        }
+
+        // Start OTP Timer (2 minutes = 120 seconds)
+        window.onload = function () {
+            const otpDisplay = document.getElementById('otp-timer');
+            startOTPTimer(120, otpDisplay);
+
+            // Start Resend Timer (1 minute = 60 seconds)
+            const resendButton = document.getElementById('resend-btn');
+            startResendTimer(60, resendButton);
+        };
+
+        // Move to the next input field after entering a digit
+        function moveToNext(current, nextInputId) {
+            if (current.value.length >= 1) {
+                document.getElementById(nextInputId).focus();
+            }
+            validateOtp();
+        }
+
+        // Validate OTP and enable the Verify button
+        function validateOtp() {
+            const otp1 = document.getElementById('otp1').value;
+            const otp2 = document.getElementById('otp2').value;
+            const otp3 = document.getElementById('otp3').value;
+            const otp4 = document.getElementById('otp4').value;
+
+            const verifyBtn = document.getElementById('verify-btn');
+            
+            // Enable Verify button only if all OTP inputs have values
+            if (otp1 && otp2 && otp3 && otp4) {
+                verifyBtn.disabled = false;
+            } else {
+                verifyBtn.disabled = true;
+            }
+        }
+
+
+        // Resend OTP Button Click Event
+        document.getElementById('resend-btn').addEventListener('click', function () {
+            alert('OTP Resent!');
+            // Restart the OTP timer and resend timer when OTP is resent
+            clearInterval(otpTimer);
+            clearInterval(resendTimer);
+
+            const otpDisplay = document.getElementById('otp-timer');
+            startOTPTimer(120, otpDisplay);
+            startResendTimer(60, this);
+
+            document.getElementById('verify-btn').disabled = false;
+
+        });
+    </script>
+
+</body>
+</html>
