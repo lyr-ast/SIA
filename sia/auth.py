@@ -27,7 +27,7 @@ def login():
                 flash('Logged in successfully!', category='success')
                 login_user(user, remember=True)
                 return redirect(url_for('views.home'))
-            else:
+            else: 
                 flash('Incorrect password, try again.', category='danger')
         else:
             flash('Email does not exist.', category='danger')
@@ -66,10 +66,8 @@ def signup():
         elif len(password) < 7:
             flash('Password must be at least 7 characters.', category='danger')
         
-
         else:
-
-            new_user = User(email=email, username=username, password=bcrypt.generate_password_hash(password))   
+            new_user = User(email=email, username=username, password=bcrypt.generate_password_hash(password).decode('utf-8'))   
 
             db.session.add(new_user)
             db.session.commit()
