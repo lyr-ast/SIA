@@ -65,13 +65,13 @@ def signup():
             flash('Password must be at least 7 characters.', category='danger')
         
         else:
+            flash('Account created!', category='success')
             new_user = User(email=email, username=username, password=bcrypt.generate_password_hash(password).decode('utf-8'))   
 
             db.session.add(new_user)
             db.session.commit()
 
             login_user(new_user, remember=True)
-            flash('Account created!', category='success')
 
             return redirect(url_for('views.home'))
 
