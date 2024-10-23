@@ -10,17 +10,27 @@
 <body>
     <header>
         <div class="navbar">
-
             <button class="brand-button">Marketplace</button>
             <div class="auth-buttons">
                 {% if current_user.is_authenticated %}
-                <button id="logout" onclick="window.location.href='/logout';">Logout</button>
+                <button id="create-listing" onclick="window.location.href='/addlisting';">Add Listing +</button>
+                <div class="dropdown">
+                    <button class="dropbtn">{{current_user.username}}</button>
+                    <div class="dropdown-content">
+                        <a href="#">Link 2</a>
+                        <a href="#">Link 3</a>
+                        <a href="#">Link 4</a>
+                        <a onclick="window.location.href='/orderfood'">Eat It</a>
+                        <a onclick="window.location.href='/logout';">Logout</a>
+                    </div>
+                </div>
                 {% endif %}
                 {% if not current_user.is_authenticated %}
+        
                 <button id="sign-up" onclick="window.location.href='/signup';">Sign Up</button>
                 <button id="sign-in" onclick="window.location.href='/login';">Sign In</button>
                 {% endif %}
-            </div>
+                </div>
         </div>
     </header>
 
@@ -28,7 +38,6 @@
         <h2>Product Listings</h2>
         <div id="product-grid" class="product-grid"></div> <!-- Product listings go here -->
     </div>
-
 
     <script src="/static/app.js"></script>
 </body>

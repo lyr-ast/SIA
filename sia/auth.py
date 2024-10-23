@@ -19,11 +19,9 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password')
 
-
         user = User.query.filter_by(email=email).first()
         if user and bcrypt.check_password_hash(user.password, password):
-
-            flash('Logged in successfully!', category='success')
+            #flash('Logged in successfully!', category='success')
             login_user(user, remember=True)
             return redirect(url_for('views.home'))
 
@@ -36,6 +34,7 @@ def login():
 
 @auth.route('/signup', methods=["GET", "POST"])
 def signup():
+    print(current_user)
     if current_user.is_authenticated:
         return redirect(url_for('views.home'))
     
@@ -45,7 +44,8 @@ def signup():
         password = request.form.get('password')
         confirmPassword = request.form.get('confirm-password')
         
-        user = User.query.filter_by(email=email).first()       
+        user = User.query.filter_by(email=email).first()   
+         
 
         if confirmPassword != password:
             flash("Passwords don't match", "danger")
@@ -65,7 +65,7 @@ def signup():
             flash('Password must be at least 7 characters.', category='danger')
         
         else:
-            flash('Account created!', category='success')
+            #flash('Account created!', category='success')
             new_user = User(email=email, username=username, password=bcrypt.generate_password_hash(password).decode('utf-8'))   
 
             db.session.add(new_user)
