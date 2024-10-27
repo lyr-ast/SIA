@@ -56,11 +56,6 @@ function renderProductCards(products) {
         const productTitle = document.createElement('h3');
         productTitle.textContent = product.product_name;  // Using product_name
 
-        // Create product description
-        const productDescription = document.createElement('p');
-        productDescription.textContent = product.description;  // Using description
-        productDescription.classList.add('product-description');  // Optional: add a class for styling
-
         // Create price information elements
         const productInfo = document.createElement('div');
 
@@ -70,28 +65,20 @@ function renderProductCards(products) {
             rentInfo.textContent = `Renting available at ₹${product.rent_price} for ${product.rent_duration} days`;
             rentInfo.classList.add('available');  // Add green color
             productInfo.appendChild(rentInfo);
+        }
 
-            const buyNotAvailable = document.createElement('p');
-            buyNotAvailable.textContent = 'Buying not available';
-            buyNotAvailable.classList.add('not-available');  // Add gray color
-            productInfo.appendChild(buyNotAvailable);
-        } else if (product.sell_price) {
+        // Show buying info if available
+        if (product.sell_price) {
             const buyInfo = document.createElement('p');
             buyInfo.textContent = `Available to buy at ₹${product.sell_price}`;  // Using sell_price
             buyInfo.classList.add('available');  // Add green color
             productInfo.appendChild(buyInfo);
-
-            const rentNotAvailable = document.createElement('p');
-            rentNotAvailable.textContent = 'Renting not available';
-            rentNotAvailable.classList.add('not-available');  // Add gray color
-            productInfo.appendChild(rentNotAvailable);
         }
 
         // Append elements to product card
         productCard.appendChild(productImage);
         productCard.appendChild(productTitle);
-        productCard.appendChild(productDescription);  // Append the description
-        productCard.appendChild(productInfo);
+        productCard.appendChild(productInfo);  // Append only the price info
 
         // Append product card to the grid
         productGrid.appendChild(productCard);

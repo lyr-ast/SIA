@@ -17,7 +17,7 @@ class Item(db.Model):
     rent_duration = db.Column(db.Integer, nullable=True)
     description = db.Column(db.Text, nullable=True)
     image_url = db.Column(db.String(200), nullable=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    username = db.Column(db.String(100), db.ForeignKey('user.username'))
 
     def to_dict(self):
         return {
@@ -29,7 +29,7 @@ class Item(db.Model):
             "rent_duration": self.rent_duration,
             "description": self.description,
             "image_url": self.image_url,
-            "user_id": self.user_id,
+            "username": self.username,
         }
     
 

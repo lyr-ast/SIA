@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up</title>
     <link rel="stylesheet" href="/static/styles.css">
     <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
-    <title>Sign Up</title>
     <style>
         /* General Styles */
         * {
@@ -22,19 +22,50 @@
             color: #e0e0e0;
             height: 100vh;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
         }
 
+        /* Consistent header styling */
+        header {
+            background: rgba(35, 47, 62, 0.2);
+            backdrop-filter: blur(15px);
+            color: #ffffff;
+            padding: 10px 0;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            width: 100%;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .brand-button {
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
         .container {
-            background: rgba(255, 255, 255, 0.1); /* Transparent background */
-            backdrop-filter: blur(10px); /* Blur for glass effect */
-            border: 1px solid rgba(255, 255, 255, 0.2); /* Semi-transparent border */
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 16px;
             padding: 40px;
             width: 350px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); /* Subtle shadow */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
             text-align: center;
+            margin-top: 40px; /* Added margin to separate container from the top bar */
         }
 
         .container h2 {
@@ -72,14 +103,6 @@
             margin-bottom: 5px;
         }
 
-        .input-group a {
-            text-decoration: none;
-            font-size: 14px;
-            color: #FF9900;
-            display: inline-block;
-            margin-top: 5px;
-        }
-
         .button {
             background-color: rgba(255, 153, 0, 0.8);
             border: none;
@@ -105,69 +128,102 @@
             color: #FF9900;
             text-decoration: none;
         }
+
+        /* Flash message styling */
+        .alert-success {
+            position: relative;
+            background-color: green;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .alert-danger {
+            position: relative;
+            background-color: red;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+        }
+
+        .flashbut {
+            background: transparent;
+            border: none;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: white;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
-
-
-{% with messages = get_flashed_messages(with_categories=true) %}
-<!-- Categories: success (green), info (blue), warning (yellow), danger (red) -->
-{% if messages %}
-{% for category, message in messages %}
-<div class="alert-{{category}}" id="div_flash">
-{{ message }}
-<button class = "flashbut" type="button" onclick="removeFlash()" style="float: right">
-    <span aria-hidden="true">&times;</span>
-</button>
-</div>
-{% endfor %}
-{% endif %}
-{% endwith %}
-
-
-<div class="container">
-    <h2>Sign Up</h2>
-
-    <form action="/signup" method="POST">
-
-        <div class="input-group">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" placeholder="Enter your username" required>
+    <header>
+        <div class="navbar">
+            <!-- Back button to the homepage -->
+            <button class="brand-button" onclick="window.location.href='/'">
+                &larr; Back
+            </button>
         </div>
+    </header>
 
 
-        <div class="input-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Enter your email" required>
-        </div>
 
-
-        <div class="input-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Enter your password" required>
-        </div>
-
-
-        <div class="input-group">
-            <label for="confirm-password">Confirm Password</label>
-            <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
-        </div>
-
-        <!-- Sign Up Button -->
-        <button type="submit" class="button">Sign Up</button>
-    </form>
-
-    <!-- Alternative Sign In Link -->
-    <div class="alternative">
-        <p>Already have an account? <a href="login">Sign In</a></p>
+    <div class="container">
+            <!-- Flash messages for success or error notifications -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert-{{category}}" id="div_flash">
+        {{ message }}
+        <button class="flashbut" type="button" onclick="removeFlash()">&times;</button>
     </div>
-</div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+        <h2>Sign Up</h2>
+        <form action="/signup" method="POST">
+            <div class="input-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="Enter your username" required>
+            </div>
 
-<script>
-    function removeFlash() {
-      const element = document.getElementById('div_flash');
-      element.remove();
-    }
-</script>
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+
+            <div class="input-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            </div>
+
+            <div class="input-group">
+                <label for="confirm-password">Confirm Password</label>
+                <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
+            </div>
+
+            <!-- Sign Up Button -->
+            <button type="submit" class="button">Sign Up</button>
+        </form>
+
+        <!-- Alternative Sign In Link -->
+        <div class="alternative">
+            <p>Already have an account? <a href="login">Sign In</a></p>
+        </div>
+    </div>
+
+    <script>
+        function removeFlash() {
+            const element = document.getElementById('div_flash');
+            if (element) {
+                element.remove();
+            }
+        }
+    </script>
 </body>
 </html>

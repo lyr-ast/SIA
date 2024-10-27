@@ -77,11 +77,6 @@ def add_listing():
                 flash('If Rent Price is provided, Rent Duration must also be included.', 'danger')
                 return redirect(url_for('views.add_listing'))
 
-            # If sell_price is provided, rent_duration must not be provided
-            if sell_price is not None and rent_duration is not None:
-                flash('If Sell Price is provided, Rent Duration must not be included.', 'danger')
-                return redirect(url_for('views.add_listing'))
-
             # Validate numeric values
             if sell_price is not None and sell_price < 0:
                 flash('Sell Price must be a non-negative number.', 'danger')
@@ -106,7 +101,7 @@ def add_listing():
             rent_duration=rent_duration,
             description=description,
             image_url=image_url,
-            user_id=current_user.id  # Link the item to the logged-in user
+            username=current_user.username  # Link the item to the logged-in user
         )
 
         # Add to the database

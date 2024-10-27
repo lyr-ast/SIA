@@ -51,19 +51,21 @@
         }
 
         input, textarea {
-            width: 100%;
             padding: 10px;
             border-radius: 10px;
             border: none;
             margin-bottom: 15px;
         }
 
-        input {
+        input[type="text"], input[type="number"] {
+            width: auto; /* Changed from 100% to auto */
+            max-width: 150px; /* Set max-width for inputs */
             background: rgba(255, 255, 255, 0.2);
             color: #ffffff;
         }
 
         textarea {
+            width: 100%; /* Keep textarea full-width */
             height: 100px;
             background: rgba(255, 255, 255, 0.2);
             color: #ffffff;
@@ -89,24 +91,6 @@
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
         }
 
-        /* Flash Messages */
-        .alert-success {
-            position: relative;
-            background-color: green;
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-        }
-
-        .alert-danger {
-            position: relative;
-            background-color: red;
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-        }
 
         ul {
             list-style-type: none; /* Remove bullet points */
@@ -116,45 +100,190 @@
         li {
             margin: 10px 0; /* Space between messages */
         }
-    </style>
+
+        /* Switch Styles */
+        .switch {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            margin-right: 20px; /* Add margin for spacing */
+        }
+
+        .switch input {
+            display: none; /* Hide the default checkbox */
+        }
+
+        .switch label {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+            background-color: #ccc;
+            border-radius: 34px;
+            transition: background-color 0.4s;
+            cursor: pointer;
+        }
+
+        .switch label:before {
+            position: absolute;
+            content: '';
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            border-radius: 50%;
+            transition: transform 0.4s;
+        }
+
+        .switch input:checked + label {
+            background-color: #FF9900; /* Color when toggled */
+        }
+
+        .switch input:checked + label:before {
+            transform: translateX(26px); /* Move toggle */
+        }
+        /* Add margin to the left of the span for spacing */
+        .switch span {
+            margin-left: 10px; /* Adjust this value for desired spacing */
+        }
+
+
+        /* Price Containers */
+        .price-row {
+            display: flex; /* Use flexbox for side-by-side layout */
+            justify-content: space-between;
+            margin-top: 10px; /* Space above price containers */
+        }
+
+        .price-box {
+            background: rgba(255, 255, 255, 0.1); /* Transparent background */
+            backdrop-filter: blur(10px); /* Blur for glass effect */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Semi-transparent border */
+            border-radius: 12px; /* Rounded corners */
+            padding: 20px; /* Padding for content */
+            flex: 1; /* Flex-grow to make both boxes equal width */
+            margin-right: 20px; /* Space between boxes */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+        }
+
+        /* Disabled Price Boxes */
+        .price-box input:disabled {
+            background-color: rgba(255, 255, 255, 0.1); /* Lighter gray background */
+            opacity: 0.5; /* Slightly faded */
+        }
+
+        /* Remove margin from the last element */
+        .price-box:last-child {
+            margin-right: 0;
+        }
+
+        /* Price Toggle Container */
+        .toggle-container {
+            display: flex; /* Use flexbox for side-by-side layout */
+            justify-content: space-between; /* Space between toggles */
+            margin-bottom: 15px; /* Space below toggles */
+        }
+
+
+        </style>
+    <script>
+        function togglePriceInputs() {
+            const sellPriceContainer = document.getElementById('sell-price-container');
+            const rentPriceContainer = document.getElementById('rent-price-container');
+            const sellToggle = document.getElementById('sell-toggle');
+            const rentToggle = document.getElementById('rent-toggle');
+
+            // Enable/disable sell price inputs based on toggle state
+            const sellInputs = sellPriceContainer.querySelectorAll('input');
+            sellInputs.forEach(input => {
+                input.disabled = !sellToggle.checked;
+            });
+
+            // Enable/disable rent price inputs based on toggle state
+            const rentInputs = rentPriceContainer.querySelectorAll('input');
+            rentInputs.forEach(input => {
+                input.disabled = !rentToggle.checked;
+            });
+
+            // Update background for price boxes
+            if (!sellToggle.checked) {
+                sellPriceContainer.style.opacity = '0.5'; // Gray out the container
+            } else {
+                sellPriceContainer.style.opacity = '1'; // Restore the opacity
+            }
+
+            if (!rentToggle.checked) {
+                rentPriceContainer.style.opacity = '0.5'; // Gray out the container
+            } else {
+                rentPriceContainer.style.opacity = '1'; // Restore the opacity
+            }
+        }
+    </script>
 </head>
 <body>
+    
     <div class="container">
+            <!-- Flash messages for success or error notifications -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert-{{category}}" id="div_flash">
+        {{ message }}
+        <button class="flashbut" type="button" onclick="removeFlash()">&times;</button>
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
         <h1>Add New Item</h1>
+        
         <form action="/addlisting" method="POST">
-            <label for="product_name">Product Name:</label>
-            <input type="text" id="product_name" name="product_name" required><br>
+            <!-- Name, Category, and Description Section -->
+            <div>
+                <label for="product_name">Product Name:</label>
+                <input type="text" id="product_name" name="product_name" required><br>
 
-            <label for="category">Category:</label>
-            <input type="text" id="category" name="category" required><br>
+                <label for="category">Category:</label>
+                <input type="text" id="category" name="category" required><br>
 
-            <label for="sell_price">Buy Price:</label>
-            <input type="number" step="0.01" id="sell_price" name="sell_price"><br>
+                <label for="description">Description:</label>
+                <textarea id="description" name="description"></textarea><br>
 
-            <label for="rent_price">Rent Price:</label>
-            <input type="number" step="0.01" id="rent_price" name="rent_price"><br>
+                <label for="image_url">Image URL:</label>
+                <input type="text" id="image_url" name="image_url"><br>
+            </div>
 
-            <label for="rent_duration">Rent Duration (days):</label>
-            <input type="number" id="rent_duration" name="rent_duration"><br>
+            <!-- Toggles for Prices -->
+            <div class="toggle-container">
+                <div class="switch">
+                    <input type="checkbox" id="sell-toggle" onclick="togglePriceInputs()" checked>
+                    <label for="sell-toggle"></label>
+                    <span>List item for selling</span>
+                </div>
+                <div class="switch">
+                    <input type="checkbox" id="rent-toggle" onclick="togglePriceInputs()" checked>
+                    <label for="rent-toggle"></label>
+                    <span>List item for renting</span>
+                </div>
+            </div>
 
-            <label for="description">Description:</label>
-            <textarea id="description" name="description"></textarea><br>
-
-            <label for="image_url">Image URL:</label>
-            <input type="text" id="image_url" name="image_url"><br>
+            <!-- Price Section -->
+            <div class="price-row">
+                <div id="sell-price-container" class="price-box">
+                    <label for="sell_price">Sell Price:</label>
+                    <input type="number" id="sell_price" name="sell_price" min="0" required>
+                </div>
+                <div id="rent-price-container" class="price-box">
+                    <label for="rent_price">Rent Price:</label>
+                    <input type="number" id="rent_price" name="rent_price" min="0" required>
+                    <label for="rent_duration">Rent Duration (days):</label>
+                    <input type="number" id="rent_duration" name="rent_duration" min="1" required>
+                </div>
+            </div>
 
             <button type="submit">Add Item</button>
         </form>
 
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                <ul>
-                    {% for category, message in messages %}
-                        <li class="{{ category }}">{{ message }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        {% endwith %}
     </div>
 </body>
 </html>

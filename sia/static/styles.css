@@ -120,10 +120,10 @@ h2 {
 }
 
 .product-card img {
-    width: 100%;
-    height: auto; /* Increased height for larger image */
-    object-fit: cover;
-    border-radius: 12px;
+    width: 100%;           /* Ensure the image takes the full width of the card */
+    height: 200px;        /* Fixed height to create uniformity */
+    object-fit: cover;    /* Ensures the image covers the area without distortion */
+    border-radius: 12px;  /* Rounded corners */
     margin-bottom: 15px;
 }
 
@@ -132,7 +132,6 @@ h2 {
     margin-bottom: 10px;
     color: #ffffff;
 }
-
 
 .product-card p.available {
     font-size: 18px; /* Font size for available info */
@@ -181,8 +180,6 @@ h2 {
     font-size: 20px;
 }
 
-
-
 .alert-success {
     position: relative;
     background-color: green;
@@ -208,6 +205,7 @@ h2 {
     top: 10px;
     right: 10px;
 }
+
 /* Dropdown Menu */
 .dropdown {
     position: relative;
@@ -279,4 +277,35 @@ h2 {
     background-color: #FF7700;
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Container for the price information */
+.price-container {
+    display: flex;
+    justify-content: space-between; /* Space between the price boxes */
+    margin-top: 20px; /* Space above the price container */
+    margin-bottom: 20px;
+}
+
+.price-box {
+    background: rgba(255, 255, 255, 0.1); /* Transparent background */
+    backdrop-filter: blur(10px); /* Blur for glass effect */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Semi-transparent border */
+    border-radius: 12px; /* Rounded corners */
+    padding: 20px; /* Padding for content */
+    flex: 1; /* Flex-grow to make both boxes equal width */
+    margin-right: 20px; /* Space between boxes */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
+
+.price-box:last-child {
+    margin-right: 0; /* No margin on the last box */
+}
+
+.sell-price {
+    color: #00FF00; /* Green color for buying price */
+}
+
+.rent-price {
+    color: #FF9900; /* Orange color for renting price */
 }
