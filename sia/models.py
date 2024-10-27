@@ -2,6 +2,7 @@ from . import db
 from flask_login import UserMixin
 
 class User(db.Model, UserMixin):
+    __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True) # primary keys are required by SQLAlchemy
     username = db.Column(db.String(100))
     email = db.Column(db.String(100), unique=True)
@@ -9,6 +10,7 @@ class User(db.Model, UserMixin):
 
 
 class Item(db.Model):
+    __tablename__ = 'item'
     id = db.Column(db.Integer, primary_key=True)
     product_name = db.Column(db.String(100), nullable=False)
     category = db.Column(db.String(50), nullable=False)
